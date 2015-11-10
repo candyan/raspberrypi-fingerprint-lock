@@ -1,13 +1,15 @@
 from flask import Flask
+from flask.ext.restful import Api
 from views.door import *
 
 app = Flask(__name__)
+api = Api(app)
 
-door_lock_view = LockAPI.as_view('door_lock')
-door_unlock_view = UnlockAPI.as_view('door_unlock')
+app.debug = True
 
-app.add_url_rule('/api/door/lock/', view_func=door_lock_view, methods=['POST',])
-app.add_url_rule('/api/door/unlock/', view_func=door_unlock_view, methods=['POST',])
+api.add_resource(DoorAPI, '/api/door', endpoint = 'door')
+api.add_resource(LockAPI, '/api/door/lock', endpoint = 'lock')
+api.add_resource(UnlockAPI, '/api/door/unlock', endpoint = 'unlock')
 
 if __name__=='__main__':
     app.run(host='0.0.0.0')
